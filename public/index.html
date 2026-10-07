@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>小房间 · 两个人的私密聊天</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="entry-view" id="entry-view">
+      <div class="entry-topline"><span class="brand-mark">◌</span><span>小房间</span><span class="privacy-chip">私密 · 2 人</span></div>
+      <div class="entry-copy">
+        <p class="eyebrow">A QUIET PLACE FOR TWO</p>
+        <h1>只给你们的<br><em>小房间</em></h1>
+        <p class="entry-description">没有公开动态，没有陌生人。创建一个房间，把链接和口令发给那一个人。</p>
+      </div>
+      <div class="entry-panel">
+        <div class="mode-switch" role="tablist" aria-label="房间操作">
+          <button class="mode-button active" data-mode="create" type="button">创建房间</button>
+          <button class="mode-button" data-mode="join" type="button">加入房间</button>
+        </div>
+        <form id="room-form">
+          <label class="field-label" for="display-name">你的称呼</label>
+          <input id="display-name" name="display-name" autocomplete="nickname" maxlength="24" placeholder="例如：小满" required>
+          <div class="join-fields" id="join-fields" hidden>
+            <label class="field-label" for="room-code">房间代码</label>
+            <input id="room-code" name="room-code" autocapitalize="characters" maxlength="6" placeholder="例如：7K3M9P">
+            <label class="field-label" for="room-key">私密口令</label>
+            <input id="room-key" name="room-key" autocapitalize="characters" maxlength="10" placeholder="输入对方发来的口令">
+          </div>
+          <p class="form-error" id="form-error" role="alert"></p>
+          <button class="primary-button" type="submit"><span id="form-submit-label">创建我的房间</span><span aria-hidden="true">→</span></button>
+        </form>
+        <div class="entry-note"><span class="lock-icon">⌑</span><span>房间只允许两位成员，消息不会写入数据库</span></div>
+      </div>
+      <p class="entry-footer">适合两个人的临时、轻量、安静聊天</p>
+    </section>
+
+    <section class="chat-view" id="chat-view" hidden>
+      <header class="chat-header">
+        <div class="header-identity">
+          <button class="icon-button back-button" id="leave-room" type="button" aria-label="离开房间" title="离开房间">←</button>
+          <div class="room-avatar">◌</div>
+          <div>
+            <p class="room-title">只属于你们的房间</p>
+            <p class="room-status"><span class="status-dot"></span><span id="member-status">等待另一位成员</span></p>
+          </div>
+        </div>
+        <button class="invite-button" id="invite-button" type="button"><span aria-hidden="true">↗</span> 邀请</button>
+      </header>
+      <div class="invite-strip" id="invite-strip" hidden>
+        <div><strong>把这个房间交给那个人</strong><span>代码 <b id="invite-code"></b> · 口令 <b id="invite-key"></b></span></div>
+        <button class="copy-button" id="copy-invite" type="button">复制链接</button>
+      </div>
+      <div class="message-area" id="message-area">
+        <div class="day-divider"><span>今天</span></div>
+        <div class="empty-state" id="empty-state">
+          <div class="empty-symbol">⌁</div>
+          <h2>房间已经准备好了</h2>
+          <p>等对方进来后，从一句“嗨”开始吧。</p>
+        </div>
+      </div>
+      <form class="composer" id="message-form">
+        <textarea id="message-input" rows="1" maxlength="2000" placeholder="写点什么……" aria-label="聊天消息"></textarea>
+        <button class="send-button" type="submit" aria-label="发送消息" title="发送消息">↑</button>
+      </form>
+      <p class="chat-footnote">消息保存在私密房间中，仅成员可以读取</p>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
