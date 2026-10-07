@@ -11,6 +11,8 @@ alter table public.room_members add column if not exists display_name text;
 alter table public.room_members add column if not exists joined_at timestamptz default now();
 
 alter table public.messages add column if not exists body text;
+alter table public.messages add column if not exists content text;
+alter table public.messages alter column content set default '';
 alter table public.messages add column if not exists created_at timestamptz default now();
 
 do $$
@@ -23,6 +25,10 @@ begin
   end if;
 end
 $$;
+
+update public.messages
+set body = coalesce(body, content), content = coalesce(content, body)
+where body is null or content is null;
 
 create or replace function public.create_room(
   p_room_code text,

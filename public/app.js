@@ -128,7 +128,7 @@ async function loadRoom() {
   updateMemberStatus(members.data || []);
 
   const messages = await supabaseClient.from('messages')
-    .select('id, sender_id, body, created_at').eq('room_id', session.roomId)
+    .select('id, sender_id, body, content, created_at').eq('room_id', session.roomId)
     .order('created_at', { ascending: true }).limit(300);
   if (messages.error) throw messages.error;
   (messages.data || []).forEach(renderMessage);
@@ -169,7 +169,7 @@ function renderMessage(message) {
   meta.textContent = `${message.sender_id === currentUser?.id ? '我' : '对方'} · ${formatTime(message.created_at)}`;
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-  bubble.textContent = message.body;
+  bubble.textContent = message.body || message.content || '';
   row.append(meta, bubble);
   messageArea.appendChild(row);
   messageArea.scrollTop = messageArea.scrollHeight;
@@ -214,8 +214,8 @@ async function submitMessage(event) {
   if (!text || !session || !currentUser) return;
   messageInput.disabled = true;
   const result = await supabaseClient.from('messages').insert({
-    room_id: session.roomId, sender_id: currentUser.id, body: text,
-  }).select('id, sender_id, body, created_at').single();
+    room_id: session.roomId, sender_id: currentUser.id, body: text, content: text,
+  }).select('id, sender_id, body, content, created_at').single();
   if (result.error) showToast(supabaseError(result.error));
   else {
     messageInput.value = '';
